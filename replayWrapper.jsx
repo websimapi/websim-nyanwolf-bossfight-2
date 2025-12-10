@@ -3,17 +3,29 @@ import React, { useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import { Player } from "@websim/remotion/player";
 import { GardensComposition } from "./GardensComposition.jsx";
-const ReplayContainer = ({ replayData }) => {
+import { MainGameComposition } from "./MainGameComposition.jsx";
+const ReplayContainer = ({ replayData, type }) => {
   if (!replayData) return null;
   const fps = 30;
-  const durationInFrames = replayData.rounds.length * 60 + 90;
+  let Component;
+  let durationInFrames;
+  let inputProps;
+  if (type === "gardens") {
+    Component = GardensComposition;
+    durationInFrames = replayData.rounds.length * 60 + 90;
+    inputProps = replayData;
+  } else if (type === "main") {
+    Component = MainGameComposition;
+    durationInFrames = replayData.frames.length;
+    inputProps = replayData;
+  }
   const handleDownload = () => {
     const jsonString = JSON.stringify(replayData, null, 2);
     const blob = new Blob([jsonString], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `gardens-replay-${Date.now()}.json`;
+    a.download = `${type}-replay-${Date.now()}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -22,15 +34,15 @@ const ReplayContainer = ({ replayData }) => {
     if (btn) btn.textContent = "Rendering...";
     setTimeout(() => {
       if (btn) btn.textContent = "Download Replay Data (.json)";
-      alert("Replay data saved! You can load this JSON in a compatible viewer. (Server-side video rendering is not available in this environment.)");
+      alert("Replay data saved! You can load this JSON in a compatible viewer.");
     }, 800);
   };
   return /* @__PURE__ */ jsxDEV("div", { style: { width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center" }, children: [
     /* @__PURE__ */ jsxDEV(
       Player,
       {
-        component: GardensComposition,
-        inputProps: replayData,
+        component: Component,
+        inputProps,
         durationInFrames,
         fps,
         compositionWidth: 800,
@@ -44,7 +56,7 @@ const ReplayContainer = ({ replayData }) => {
       false,
       {
         fileName: "<stdin>",
-        lineNumber: 37,
+        lineNumber: 51,
         columnNumber: 13
       }
     ),
@@ -61,35 +73,35 @@ const ReplayContainer = ({ replayData }) => {
       false,
       {
         fileName: "<stdin>",
-        lineNumber: 50,
+        lineNumber: 64,
         columnNumber: 17
       }
     ) }, void 0, false, {
       fileName: "<stdin>",
-      lineNumber: 49,
+      lineNumber: 63,
       columnNumber: 13
     }),
     /* @__PURE__ */ jsxDEV("p", { style: { marginTop: "10px", fontSize: "12px", color: "#aaa" }, children: "* Video export requires a backend server. Download the replay file to save your victory!" }, void 0, false, {
       fileName: "<stdin>",
-      lineNumber: 59,
-      columnNumber: 13
+      lineNumber: 73,
+      columnNumber: 14
     })
   ] }, void 0, true, {
     fileName: "<stdin>",
-    lineNumber: 36,
+    lineNumber: 50,
     columnNumber: 9
   });
 };
 let root = null;
-const mountReplay = (containerId, data) => {
+const mountReplay = (containerId, data, type = "gardens") => {
   const container = document.getElementById(containerId);
   if (!container) return;
   if (!root) {
     root = createRoot(container);
   }
-  root.render(/* @__PURE__ */ jsxDEV(ReplayContainer, { replayData: data }, void 0, false, {
+  root.render(/* @__PURE__ */ jsxDEV(ReplayContainer, { replayData: data, type }, void 0, false, {
     fileName: "<stdin>",
-    lineNumber: 76,
+    lineNumber: 90,
     columnNumber: 17
   }));
 };

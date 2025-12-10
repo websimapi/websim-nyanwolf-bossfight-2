@@ -75,6 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const gameOverMessage = document.getElementById('game-over-message');
     const gameOverBossImg = document.getElementById('game-over-boss-img');
     const restartButton = document.getElementById('restart-button');
+    const mainGameWatchReplayButton = document.getElementById('main-game-watch-replay-button'); // NEW
     const scoreDisplay = document.getElementById('score-display');
     const bgm = document.getElementById('bgm');
     const effectsLayer = document.getElementById('effects-layer'); 
@@ -163,6 +164,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let scoreIntervalId;
     let lastPlayerAttackTime = 0;
     let isPaused = false;
+
+    // Replay Data
+    let mainGameRecording = { staticData: {}, frames: [] };
 
     // Gardens Game State
     let gardensGameActive = false;
@@ -750,6 +754,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         healItem = null;
 
+        // Initialize Replay Recording
+        mainGameRecording = {
+            staticData: {
+                playerSkin: playerElem.style.backgroundImage,
+                bossSkin: bossElem.style.backgroundImage,
+                background: gameArea.style.backgroundImage || (gameArea.style.backgroundColor === 'white' ? 'white' : '#1a1a2e'),
+                playerMaxHealth: currentPlayerMaxHealth,
+                bossMaxHealth: currentBossMaxHealth
+            },
+            frames: []
+        };
+        
         if (gameMode === 'SECRET_NO_HIT') {
             currentPlayerMaxHealth = 1;
             player.health = 1;
@@ -860,6 +876,12 @@ document.addEventListener('DOMContentLoaded', () => {
             bossElem.style.animation = 'nyanPulse 1.5s infinite ease-in-out';
         }
         bossElem.style.animationPlayState = 'running'; // Ensure animation is running
+
+        // Re-capture static data after skin/bg applications
+        mainGameRecording.staticData.playerSkin = playerElem.style.backgroundImage;
+        mainGameRecording.staticData.bossSkin = bossElem.style.backgroundImage;
+        mainGameRecording.staticData.background = gameArea.style.backgroundImage || (gameArea.style.backgroundColor === 'white' ? 'white' : '#1a1a2e');
+
 
         // Apply game background
         if (equippedGameBackgroundId === 'game_bg_white') {
@@ -1050,7 +1072,8 @@ document.addEventListener('DOMContentLoaded', () => {
             height: pHeight,
             type: type, // 'straight', 'homing', 'spread' for boss
             dx: Math.sin(angleOffset) * currentProjectileSpeed, 
-            dy: Math.cos(angleOffset) * currentProjectileSpeed  
+            dy: Math.cos(angleOffset) * currentProjectileSpeed,
+            image: pImage // Store image for replay
         };
         if (type === 'straight' || type === 'homing') {
             projectile.dx = 0; 
@@ -1317,6 +1340,9 @@ document.addEventListener('DOMContentLoaded', () => {
         shopScreen.style.display = 'none'; // Ensure shop is hidden
         strategyBookModal.style.display = 'none'; // Ensure strategy book modal is hidden
 
+        // Show Replay Button
+        mainGameWatchReplayButton.style.display = 'inline-block';
+
         if (playerWon) {
             if (currentGameMode === 'HARD') {
                 localStorage.setItem('hardModeBeaten', 'true');
@@ -1383,6 +1409,11 @@ document.addEventListener('DOMContentLoaded', () => {
         resetGameToMenu(); 
     });
     
+    mainGameWatchReplayButton.addEventListener('click', () => {
+        replayModal.style.display = 'flex';
+        mountReplay('replay-root', mainGameRecording, 'main');
+    });
+
     // Simplified: only one way to start the game
     startGameButton.addEventListener('click', () => {
         currentGameMode = 'HARD';
@@ -1939,7 +1970,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     gardensWatchReplayButton.addEventListener('click', () => {
         replayModal.style.display = 'flex';
-        mountReplay('replay-root', gardensReplayData);
+        mountReplay('replay-root', gardensReplayData, 'gardens');
     });
 
     closeReplayButton.addEventListener('click', () => {
@@ -2171,6 +2202,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if(!isPaused) gameLoopId = requestAnimationFrame(gameLoop); 
             return;
         }
+        
+        recordMainGameFrame(); // Record frame
 
         if (isChargingStinkRay) {
             updateStinkRayCharge();
@@ -2233,6 +2266,8 @@ document.addEventListener('DOMContentLoaded', () => {
         isGameOver = true; 
         isPaused = false;
         
+        mainGameWatchReplayButton.style.display = 'none'; // Hide replay button
+
         if (gameLoopId) cancelAnimationFrame(gameLoopId);
         if (scoreIntervalId) clearInterval(scoreIntervalId);
         if (bgm && !bgm.paused) bgm.pause();
@@ -2332,5 +2367,20 @@ document.addEventListener('DOMContentLoaded', () => {
             
             gameLoopId = requestAnimationFrame(gameLoop);
         }
+    }
+
+    function recordMainGameFrame() {
+        if (!mainGameRecording) return;
+        
+        // Lightweight snapshot
+        mainGameRecording.frames.push({
+            player: { x: player.x, y: player.y, width: player.width, height: player.height },
+            boss: { x: boss.x, y: boss.y, width: boss.width, height: boss.height, filter: bossElem.style.filter },
+            projectiles: projectiles.map(p => ({ x: p.x, y: p.y, width: p.width, height: p.height, image: p.image })),
+            playerProjectiles: playerProjectiles.map(p => ({ x: p.x, y: p.y, width: p.width, height: p.height, type: p.type })),
+            score: score,
+            playerHealth: player.health,
+            bossHealth: boss.health
+        });
     }
 });
