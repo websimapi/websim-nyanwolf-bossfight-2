@@ -18,9 +18,14 @@ const ReplayContainer = ({ replayData }) => {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    alert("Replay data downloaded! (Note: Full video rendering requires a server, so we saved the match data for you!)");
+    const btn = document.getElementById("replay-download-btn");
+    if (btn) btn.textContent = "Rendering...";
+    setTimeout(() => {
+      if (btn) btn.textContent = "Download Replay Data (.json)";
+      alert("Replay data saved! You can load this JSON in a compatible viewer. (Server-side video rendering is not available in this environment.)");
+    }, 800);
   };
-  return /* @__PURE__ */ jsxDEV("div", { style: { width: "100%", height: "100%", display: "flex", flexDirection: "column" }, children: [
+  return /* @__PURE__ */ jsxDEV("div", { style: { width: "100%", height: "100%", display: "flex", flexDirection: "column", alignItems: "center" }, children: [
     /* @__PURE__ */ jsxDEV(
       Player,
       {
@@ -30,7 +35,7 @@ const ReplayContainer = ({ replayData }) => {
         fps,
         compositionWidth: 800,
         compositionHeight: 600,
-        style: { width: "100%", height: "100%", maxHeight: "550px" },
+        style: { width: "100%", maxWidth: "800px", flexGrow: 1, maxHeight: "550px", border: "2px solid #563d7c", borderRadius: "5px" },
         controls: true,
         autoPlay: true,
         loop: true
@@ -39,38 +44,39 @@ const ReplayContainer = ({ replayData }) => {
       false,
       {
         fileName: "<stdin>",
-        lineNumber: 31,
+        lineNumber: 37,
         columnNumber: 13
       }
     ),
-    /* @__PURE__ */ jsxDEV(
+    /* @__PURE__ */ jsxDEV("div", { style: { display: "flex", gap: "10px", marginTop: "15px" }, children: /* @__PURE__ */ jsxDEV(
       "button",
       {
+        id: "replay-download-btn",
         onClick: handleDownload,
-        style: {
-          marginTop: "10px",
-          padding: "10px 20px",
-          backgroundColor: "#28a745",
-          color: "white",
-          border: "none",
-          borderRadius: "5px",
-          cursor: "pointer",
-          fontFamily: "Orbitron, sans-serif",
-          alignSelf: "center"
-        },
-        children: "Download Replay Data"
+        className: "shop-button",
+        style: { backgroundColor: "#28a745", fontSize: "16px" },
+        children: "Download Replay Data (.json)"
       },
       void 0,
       false,
       {
         fileName: "<stdin>",
-        lineNumber: 43,
-        columnNumber: 13
+        lineNumber: 50,
+        columnNumber: 17
       }
-    )
+    ) }, void 0, false, {
+      fileName: "<stdin>",
+      lineNumber: 49,
+      columnNumber: 13
+    }),
+    /* @__PURE__ */ jsxDEV("p", { style: { marginTop: "10px", fontSize: "12px", color: "#aaa" }, children: "* Video export requires a backend server. Download the replay file to save your victory!" }, void 0, false, {
+      fileName: "<stdin>",
+      lineNumber: 59,
+      columnNumber: 13
+    })
   ] }, void 0, true, {
     fileName: "<stdin>",
-    lineNumber: 30,
+    lineNumber: 36,
     columnNumber: 9
   });
 };
@@ -83,7 +89,7 @@ const mountReplay = (containerId, data) => {
   }
   root.render(/* @__PURE__ */ jsxDEV(ReplayContainer, { replayData: data }, void 0, false, {
     fileName: "<stdin>",
-    lineNumber: 73,
+    lineNumber: 76,
     columnNumber: 17
   }));
 };

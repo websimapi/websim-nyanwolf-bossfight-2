@@ -1594,7 +1594,8 @@ body {
 
 #replay-content {
     width: 800px;
-    height: 650px;
+    height: auto;
+    max-height: 90vh;
     background: #1a1a2e;
     border: 2px solid #fff;
     border-radius: 10px;
@@ -1602,6 +1603,7 @@ body {
     flex-direction: column;
     align-items: center;
     padding: 10px;
+    overflow-y: auto;
 }
 
 #replay-root {

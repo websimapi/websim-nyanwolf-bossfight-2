@@ -1,6 +1,6 @@
 import { jsxDEV } from "react/jsx-dev-runtime";
 import React from "react";
-import { AbsoluteFill, Img, Sequence, useCurrentFrame, interpolate, spring, useVideoConfig } from "remotion";
+import { AbsoluteFill, Img, Sequence, Audio, useCurrentFrame, interpolate, useVideoConfig } from "remotion";
 const CARROT_STAGES = [
   "/carrot_stage_0.png",
   "/carrot_stage_1.png",
@@ -53,6 +53,24 @@ const GardensComposition = ({ rounds, playerAvatar, nyanwolfAvatar, winner, fina
       lineNumber: 72,
       columnNumber: 13
     }),
+    rounds.map((_, i) => /* @__PURE__ */ jsxDEV(Sequence, { from: i * roundDuration, children: /* @__PURE__ */ jsxDEV(Audio, { src: "/heal_pickup.mp3", volume: 0.5 }, void 0, false, {
+      fileName: "<stdin>",
+      lineNumber: 77,
+      columnNumber: 21
+    }) }, i, false, {
+      fileName: "<stdin>",
+      lineNumber: 76,
+      columnNumber: 17
+    })),
+    /* @__PURE__ */ jsxDEV(Sequence, { from: rounds.length * roundDuration, children: /* @__PURE__ */ jsxDEV(Audio, { src: "/shop_enter.mp3", volume: 0.6 }, void 0, false, {
+      fileName: "<stdin>",
+      lineNumber: 81,
+      columnNumber: 17
+    }) }, void 0, false, {
+      fileName: "<stdin>",
+      lineNumber: 80,
+      columnNumber: 13
+    }),
     /* @__PURE__ */ jsxDEV("div", { style: {
       position: "absolute",
       top: 50,
@@ -61,47 +79,20 @@ const GardensComposition = ({ rounds, playerAvatar, nyanwolfAvatar, winner, fina
       fontFamily: '"Press Start 2P", monospace',
       fontSize: 24,
       color: "white",
-      textShadow: "2px 2px 0 #000"
+      textShadow: "2px 2px 0 #000",
+      zIndex: 10
     }, children: roundText }, void 0, false, {
       fileName: "<stdin>",
-      lineNumber: 75,
+      lineNumber: 85,
       columnNumber: 13
     }),
     /* @__PURE__ */ jsxDEV("div", { style: { position: "absolute", bottom: 50, left: 100, display: "flex", flexDirection: "column", alignItems: "center" }, children: [
       /* @__PURE__ */ jsxDEV(Img, { src: playerAvatar, style: { width: 100, height: 100, marginBottom: -10 } }, void 0, false, {
         fileName: "<stdin>",
-        lineNumber: 90,
-        columnNumber: 17
-      }),
-      /* @__PURE__ */ jsxDEV("div", { style: { width: 150, height: 120, display: "flex", justifyContent: "center", alignItems: "center" }, children: /* @__PURE__ */ jsxDEV(Img, { src: CARROT_STAGES[playerStage], style: { width: "100%", objectFit: "contain" } }, void 0, false, {
-        fileName: "<stdin>",
-        lineNumber: 92,
-        columnNumber: 21
-      }) }, void 0, false, {
-        fileName: "<stdin>",
-        lineNumber: 91,
-        columnNumber: 17
-      }),
-      /* @__PURE__ */ jsxDEV("div", { style: { fontFamily: '"Press Start 2P"', color: "white", marginTop: 10, textShadow: "1px 1px 0 #000" }, children: [
-        "Size: ",
-        Math.floor(currentPlayerSize)
-      ] }, void 0, true, {
-        fileName: "<stdin>",
-        lineNumber: 94,
-        columnNumber: 17
-      })
-    ] }, void 0, true, {
-      fileName: "<stdin>",
-      lineNumber: 89,
-      columnNumber: 13
-    }),
-    /* @__PURE__ */ jsxDEV("div", { style: { position: "absolute", bottom: 50, right: 100, display: "flex", flexDirection: "column", alignItems: "center" }, children: [
-      /* @__PURE__ */ jsxDEV(Img, { src: nyanwolfAvatar, style: { width: 100, height: 100, marginBottom: -10 } }, void 0, false, {
-        fileName: "<stdin>",
         lineNumber: 101,
         columnNumber: 17
       }),
-      /* @__PURE__ */ jsxDEV("div", { style: { width: 150, height: 120, display: "flex", justifyContent: "center", alignItems: "center" }, children: /* @__PURE__ */ jsxDEV(Img, { src: CARROT_STAGES[enemyStage], style: { width: "100%", objectFit: "contain" } }, void 0, false, {
+      /* @__PURE__ */ jsxDEV("div", { style: { width: 150, height: 120, display: "flex", justifyContent: "center", alignItems: "center" }, children: /* @__PURE__ */ jsxDEV(Img, { src: CARROT_STAGES[playerStage], style: { width: "100%", objectFit: "contain" } }, void 0, false, {
         fileName: "<stdin>",
         lineNumber: 103,
         columnNumber: 21
@@ -112,7 +103,7 @@ const GardensComposition = ({ rounds, playerAvatar, nyanwolfAvatar, winner, fina
       }),
       /* @__PURE__ */ jsxDEV("div", { style: { fontFamily: '"Press Start 2P"', color: "white", marginTop: 10, textShadow: "1px 1px 0 #000" }, children: [
         "Size: ",
-        Math.floor(currentEnemySize)
+        Math.floor(currentPlayerSize)
       ] }, void 0, true, {
         fileName: "<stdin>",
         lineNumber: 105,
@@ -123,6 +114,34 @@ const GardensComposition = ({ rounds, playerAvatar, nyanwolfAvatar, winner, fina
       lineNumber: 100,
       columnNumber: 13
     }),
+    /* @__PURE__ */ jsxDEV("div", { style: { position: "absolute", bottom: 50, right: 100, display: "flex", flexDirection: "column", alignItems: "center" }, children: [
+      /* @__PURE__ */ jsxDEV(Img, { src: nyanwolfAvatar, style: { width: 100, height: 100, marginBottom: -10 } }, void 0, false, {
+        fileName: "<stdin>",
+        lineNumber: 112,
+        columnNumber: 17
+      }),
+      /* @__PURE__ */ jsxDEV("div", { style: { width: 150, height: 120, display: "flex", justifyContent: "center", alignItems: "center" }, children: /* @__PURE__ */ jsxDEV(Img, { src: CARROT_STAGES[enemyStage], style: { width: "100%", objectFit: "contain" } }, void 0, false, {
+        fileName: "<stdin>",
+        lineNumber: 114,
+        columnNumber: 21
+      }) }, void 0, false, {
+        fileName: "<stdin>",
+        lineNumber: 113,
+        columnNumber: 17
+      }),
+      /* @__PURE__ */ jsxDEV("div", { style: { fontFamily: '"Press Start 2P"', color: "white", marginTop: 10, textShadow: "1px 1px 0 #000" }, children: [
+        "Size: ",
+        Math.floor(currentEnemySize)
+      ] }, void 0, true, {
+        fileName: "<stdin>",
+        lineNumber: 116,
+        columnNumber: 17
+      })
+    ] }, void 0, true, {
+      fileName: "<stdin>",
+      lineNumber: 111,
+      columnNumber: 13
+    }),
     /* @__PURE__ */ jsxDEV("div", { style: {
       position: "absolute",
       top: 20,
@@ -131,10 +150,11 @@ const GardensComposition = ({ rounds, playerAvatar, nyanwolfAvatar, winner, fina
       fontFamily: "monospace",
       fontSize: 20,
       fontWeight: "bold",
-      animation: "blink 1s infinite"
+      animation: "blink 1s infinite",
+      zIndex: 20
     }, children: "\u25CF REPLAY" }, void 0, false, {
       fileName: "<stdin>",
-      lineNumber: 111,
+      lineNumber: 122,
       columnNumber: 13
     })
   ] }, void 0, true, {
