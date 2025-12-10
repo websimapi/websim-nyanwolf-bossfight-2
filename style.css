@@ -59,9 +59,9 @@ body {
 }
 
 @keyframes textPulse {
-    0% { transform: scale(1); opacity: 0.8; }
-    50% { transform: scale(1.05); opacity: 1; }
-    100% { transform: scale(1); opacity: 0.8; }
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
 }
 
 /* --- Splash Screen --- */
@@ -118,6 +118,10 @@ body {
     opacity: 0; /* Start invisible */
     transition: opacity 0.5s ease-in-out;
     pointer-events: none;
+}
+
+#splash-prompt-text.visible {
+    opacity: 1;
     animation: textPulse 2s infinite ease-in-out;
 }
 

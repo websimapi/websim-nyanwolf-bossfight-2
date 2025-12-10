@@ -431,7 +431,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!splashPromptVisible) {
             splashPromptVisible = true;
             if (splashPromptText) {
-                splashPromptText.style.opacity = '1';
+                splashPromptText.classList.add('visible');
             }
             // IMPORTANT: unlock audio context on first user interaction
             if (!audioContext) {
